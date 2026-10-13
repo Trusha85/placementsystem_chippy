@@ -6,7 +6,13 @@
 {% if user.is_authenticated %}
 <div class="shell">
 <nav class="side" aria-label="Main">
-  <div class="brand">NFSU Placement Cell<small>Placement session 2026-27</small></div>
+  <div class="brand">
+    <img src="{% static 'nfsu_logo.png' %}" alt="NFSU Logo" class="brand-logo">
+    <div class="brand-text">
+      <span>NFSU Placement Cell</span>
+      <small>Placement session 2026-27</small>
+    </div>
+  </div>
   {% if user.role == "ADMIN" or user.role == "OFFICER" or user.role == "COORDINATOR" %}
     <a href="{% url 'dashboard' %}">Dashboard</a>
     <a href="{% url 'student_list' %}">Students</a>

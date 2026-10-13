@@ -3,9 +3,12 @@
 *{box-sizing:border-box}
 body{margin:0;font:15px/1.5 "Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif;color:var(--ink);background:var(--bg)}
 a{color:var(--brand)}
-.shell{display:grid;grid-template-columns:230px 1fr;min-height:100vh}
+.shell{display:grid;grid-template-columns:250px 1fr;min-height:100vh}
 .side{background:var(--brand);color:#e9f3f5;padding:20px 14px;display:flex;flex-direction:column;gap:4px}
-.brand{font-weight:700;font-size:17px;line-height:1.25;margin-bottom:18px;padding:0 8px}
+.brand{display:flex;align-items:center;gap:12px;font-weight:700;font-size:15px;line-height:1.25;margin-bottom:20px;padding:4px 6px}
+.brand-logo{width:40px;height:auto;max-height:50px;object-fit:contain;flex-shrink:0;filter:drop-shadow(0 2px 4px rgba(0,0,0,0.2))}
+.brand-text{display:flex;flex-direction:column}
+.brand-text span{font-weight:700;letter-spacing:-0.2px}
 .brand small{display:block;font-weight:400;font-size:12px;color:#a9cbd3;margin-top:3px}
 .side a{color:#e9f3f5;text-decoration:none;padding:8px 10px;border-radius:var(--r)}
 .side a:hover,.side a.on{background:rgba(255,255,255,.14)}
@@ -51,7 +54,9 @@ input:focus,select:focus,textarea:focus,a:focus,button:focus{outline:3px solid #
 .verdict.ALLOW{border-left-color:var(--ok)}.verdict.REVIEW{border-left-color:var(--warn)}.verdict.BLOCK{border-left-color:var(--bad)}
 .verdict h3{margin-bottom:8px}.verdict ul{margin:0;padding-left:18px}.verdict li{margin-bottom:5px}
 .lvl-BLOCK{color:var(--bad)}.lvl-REVIEW{color:var(--warn)}.lvl-ALLOW{color:var(--ok)}
-.login{max-width:380px;margin:9vh auto;padding:0 16px}
+.login{max-width:400px;margin:8vh auto;padding:0 16px}
+.login-header{text-align:center;margin-bottom:20px}
+.login-logo{width:80px;height:auto;max-height:100px;margin:0 auto 12px;display:block;filter:drop-shadow(0 4px 12px rgba(14,74,91,0.18))}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
 dl.facts{display:grid;grid-template-columns:170px 1fr;gap:6px 14px;margin:0}dl.facts dt{color:var(--muted)}dl.facts dd{margin:0}
 .actions{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}

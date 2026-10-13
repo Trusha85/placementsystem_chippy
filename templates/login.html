@@ -1,6 +1,10 @@
-{% extends "base.html" %}{% block title %}Sign in{% endblock %}
+{% extends "base.html" %}{% load static %}{% block title %}Sign in{% endblock %}
 {% block content %}
-<h1>NFSU Placement Portal</h1><p class="sub">Sign in with your institutional account.</p>
+<div class="login-header">
+  <img src="{% static 'nfsu_logo.png' %}" alt="NFSU Logo" class="login-logo">
+  <h1>NFSU Placement Portal</h1>
+  <p class="sub">Sign in with your institutional account.</p>
+</div>
 {% if error %}<div class="msg error" role="alert">{{ error }}</div>{% endif %}
 <form method="post" class="panel" autocomplete="off">{% csrf_token %}
 <input type="hidden" name="next" value="{{ next }}">
