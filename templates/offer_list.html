@@ -1,0 +1,10 @@
+{% extends "base.html" %}{% block title %}Offers{% endblock %}
+{% block content %}<h1>Offers</h1><p class="sub">Each row is one offer event. A student with several offers appears several times.</p>
+<form method="get" class="filters"><label>Search<input name="q" value="{{ q }}" maxlength="80" placeholder="Company, student, ID"></label>
+<label>Show<select name="f"><option value="">All offers</option><option value="pending" {% if f == "pending" %}selected{% endif %}>Pending acceptance</option><option value="joining" {% if f == "joining" %}selected{% endif %}>Accepted, joining pending</option><option value="review" {% if f == "review" %}selected{% endif %}>Needs policy review</option></select></label>
+<button type="submit">Filter</button></form>
+<div class="wrap"><table><thead><tr><th>Student</th><th>Company</th><th>Type</th><th>Cat.</th>{% if show_comp %}<th class="n">CTC (LPA)</th><th class="n">Stipend</th>{% endif %}<th>Acceptance</th><th>Joining</th><th>Policy</th></tr></thead><tbody>
+{% for o in page %}<tr><td><a href="{% url 'student_detail' o.student_id %}">{{ o.student.placement_id }}</a> {{ o.student.name }}</td><td>{{ o.company.name }}</td><td>{{ o.get_offer_type_display }}</td><td>{{ o.category }}</td>
+{% if show_comp %}<td class="n">{{ o.ctc_lpa|default:"-" }}</td><td class="n">{{ o.stipend_amount|default:"-" }}</td>{% endif %}
+<td>{{ o.get_acceptance_status_display }}</td><td>{{ o.get_joining_status_display }}</td><td>{% if o.needs_review %}<span class="chip warn">Review</span>{% else %}<span class="chip ok">OK</span>{% endif %}</td></tr>
+{% empty %}<tr><td colspan="9">No offers.</td></tr>{% endfor %}</tbody></table></div>{% include "_pager.html" %}{% endblock %}

@@ -1,0 +1,15 @@
+{% extends "base.html" %}{% block title %}Two-step login{% endblock %}
+{% block content %}<h1>Two-step login (TOTP)</h1>
+{% if user.mfa_enabled %}
+<p class="sub">Enabled. Your sign-in requires a code from your authenticator app.</p>
+<form method="post" class="panel">{% csrf_token %}<input type="hidden" name="action" value="disable">
+<div class="frow"><label>Password</label><input type="password" name="password" required></div>
+<div class="frow"><label>Current code</label><input name="code" inputmode="numeric" maxlength="6" minlength="6" required></div>
+<button class="danger" type="submit">Turn off two-step login</button></form>
+{% else %}
+<p class="sub">Add this key to an authenticator app (Google Authenticator, Authy, Microsoft Authenticator), then enter the 6-digit code.</p>
+<div class="panel"><b>Setup key:</b> <code>{{ secret }}</code><br><span class="help">Or paste in the app: {{ uri }}</span></div>
+<form method="post" class="panel">{% csrf_token %}<input type="hidden" name="action" value="enable">
+<div class="frow"><label>6-digit code</label><input name="code" inputmode="numeric" maxlength="6" minlength="6" required></div>
+<button type="submit">Turn on two-step login</button></form>
+{% endif %}{% endblock %}

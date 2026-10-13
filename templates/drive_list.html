@@ -1,0 +1,6 @@
+{% extends "base.html" %}{% block title %}Drives{% endblock %}
+{% block content %}<h1>Recruitment drives</h1><p class="sub">Open a drive to see who is allowed, blocked or needs review - with the reason.</p>
+{% if user.role == "ADMIN" or user.role == "OFFICER" %}<p><a class="btn" href="{% url 'drive_create' %}">New drive</a></p>{% endif %}
+<div class="wrap"><table><thead><tr><th>Date</th><th>Company</th><th>Drive</th><th>Offer type</th><th>Category</th><th class="n">CTC (LPA)</th></tr></thead><tbody>
+{% for d in drives %}<tr><td>{{ d.date }}</td><td>{{ d.company.name }}</td><td><a href="{% url 'drive_detail' d.pk %}">{{ d.title }}</a></td><td>{{ d.get_offer_type_display }}</td><td>{{ d.category }}</td><td class="n">{{ d.ctc_lpa|default:"-" }}</td></tr>
+{% empty %}<tr><td colspan="6">No drives yet.</td></tr>{% endfor %}</tbody></table></div>{% endblock %}

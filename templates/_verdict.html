@@ -1,0 +1,3 @@
+<div class="verdict {{ decision.outcome }}"><h3><span class="chip {{ decision.outcome }}">{{ decision.outcome }}</span>
+{% if decision.outcome == "BLOCK" %} Policy blocks this{% elif decision.outcome == "REVIEW" %} Refer for manual review{% else %} Allowed{% endif %}</h3>
+<ul>{% for lvl, txt in decision.items %}<li class="lvl-{{ lvl }}">{{ txt }}</li>{% endfor %}</ul></div>

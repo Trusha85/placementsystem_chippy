@@ -1,0 +1,25 @@
+{% extends "base.html" %}{% block title %}{{ st.placement_id }}{% endblock %}
+{% block content %}
+<h1>{{ st.name }}</h1><p class="sub">{{ st.placement_id }} - {{ st.course_label }}, batch {{ st.batch }}{% if st.is_archived %} - <span class="chip neutral">Archived</span>{% endif %}</p>
+{% if can_edit %}<div class="actions"><a class="btn" href="{% url 'offer_create' st.pk %}">Record offer</a><a class="btn alt" href="{% url 'student_edit' st.pk %}">Edit</a>
+<form method="post" action="{% url 'student_archive' st.pk %}">{% csrf_token %}<button class="alt" type="submit">{% if st.is_archived %}Restore{% else %}Archive{% endif %}</button></form>
+{% if user.role == "ADMIN" %}<form method="post" action="{% url 'student_delete' st.pk %}">{% csrf_token %}<button class="danger" type="submit">Delete (no offers only)</button></form>{% endif %}</div>{% endif %}
+<div class="panel"><dl class="facts">
+<dt>Placement status</dt><dd><b>{{ placement_status }}</b> <span class="help">(derived from offers - not editable)</span></dd>
+<dt>Registration</dt><dd>{{ st.get_registration_status_display }}</dd>
+<dt>Eligibility</dt><dd>{{ st.get_eligibility_status_display }}</dd>
+{% if show_contact %}<dt>Mobile</dt><dd>{{ mobile }}</dd><dt>Email</dt><dd>{{ st.email }}</dd>{% else %}<dt>Contact</dt><dd class="help">Restricted for your role</dd>{% endif %}
+<dt>Remarks</dt><dd>{{ st.remarks|default:"-" }}</dd></dl></div>
+<h2>Offer history</h2>
+<div class="wrap"><table><thead><tr><th>Date</th><th>Company</th><th>Type</th><th>Cat.</th>{% if show_comp %}<th class="n">CTC (LPA)</th><th class="n">Stipend</th>{% endif %}<th>Acceptance</th><th>Joining</th><th>PPO</th><th>Policy</th>{% if can_edit %}<th></th>{% endif %}</tr></thead><tbody>
+{% for o in offers %}<tr><td>{{ o.offered_at|date:"d M Y H:i" }}{% if o.off_campus %}<br><span class="chip neutral">Off-campus</span>{% endif %}</td><td>{{ o.company.name }}</td><td>{{ o.get_offer_type_display }}</td><td>{{ o.category }}</td>
+{% if show_comp %}<td class="n">{{ o.ctc_lpa|default:"-" }}</td><td class="n">{% if o.stipend_amount %}{{ o.stipend_amount }} ({{ o.get_stipend_period_display }}){% else %}-{% endif %}</td>{% endif %}
+<td>{{ o.get_acceptance_status_display }}{% if o.acceptance_status == "PENDING" and o.acceptance_deadline %}<br><span class="help">by {{ o.acceptance_deadline|date:"d M H:i" }}</span>{% endif %}</td><td>{{ o.get_joining_status_display }}</td><td>{{ o.get_ppo_status_display }}</td>
+<td>{% if o.policy_outcome %}<span class="chip {{ o.policy_outcome }}">{{ o.policy_outcome }}</span>{% endif %}{% if o.needs_review %} <span class="chip warn">Review</span>{% endif %}{% if o.override_reason %}<br><span class="help">Override: {{ o.override_reason }}</span>{% endif %}</td>
+{% if can_edit %}<td><a href="{% url 'offer_update' o.pk %}">Update</a></td>{% endif %}</tr>
+{% empty %}<tr><td colspan="11">No offers on record.</td></tr>{% endfor %}</tbody></table></div>
+{% if attendance %}<h2>Recruitment attendance</h2><div class="wrap"><table><thead><tr><th>Drive</th><th>Date</th><th>Status</th></tr></thead><tbody>
+{% for a in attendance %}<tr><td>{{ a.drive.title }}</td><td>{{ a.drive.date }}</td><td>{{ a.get_status_display }}</td></tr>{% endfor %}</tbody></table></div>{% endif %}
+{% if history %}<h2>Recent changes</h2><div class="wrap"><table><thead><tr><th>When</th><th>Who</th><th>Action</th></tr></thead><tbody>
+{% for h in history %}<tr><td>{{ h.timestamp|date:"d M Y H:i" }}</td><td>{{ h.actor_name }}</td><td>{{ h.action }}</td></tr>{% endfor %}</tbody></table></div>{% endif %}
+{% endblock %}

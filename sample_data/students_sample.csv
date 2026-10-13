@@ -1,0 +1,6 @@
+placement_id,name,mobile,email,course,batch,registration_status,eligibility_status,remarks
+NFSUIMP001,Anika Rao,9812345670,anika.rao@nfsu.example,MSC_DFIS,2025-27,REGISTERED,ELIGIBLE,
+NFSUIMP002,Bhavin Soni,9812345671,bhavin.soni@nfsu.example,MTECH_AIDS,2025-27,REGISTERED,PENDING,Marksheet verification pending
+NFSUIMP003,Chirag Dave,9812345672,chirag.dave@nfsu.example,BTECH_MTECH_CS,2025-27,NOT_REGISTERED,PENDING,
+NFSUIMP001,Duplicate Row,9812345673,dup@nfsu.example,MSC_CS,2025-27,REGISTERED,ELIGIBLE,This row will be rejected (duplicate ID)
+NFSUIMP005,Bad Mobile,12345,bad@nfsu.example,MSC_CS,2025-27,REGISTERED,ELIGIBLE,This row will be rejected (invalid mobile)

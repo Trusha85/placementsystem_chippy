@@ -1,0 +1,12 @@
+{% extends "base.html" %}{% block title %}Sign in{% endblock %}
+{% block content %}
+<h1>NFSU Placement Portal</h1><p class="sub">Sign in with your institutional account.</p>
+{% if error %}<div class="msg error" role="alert">{{ error }}</div>{% endif %}
+<form method="post" class="panel" autocomplete="off">{% csrf_token %}
+<input type="hidden" name="next" value="{{ next }}">
+<div class="frow"><label for="u">Username</label><input id="u" name="username" required maxlength="150" autofocus></div>
+<div class="frow"><label for="p">Password</label><input id="p" type="password" name="password" required autocomplete="current-password"></div>
+<div class="frow"><label for="o">Authentication code</label><input id="o" name="otp" inputmode="numeric" maxlength="6" autocomplete="one-time-code">
+<div class="help">Only if you enabled two-step login.</div></div>
+<button type="submit">Sign in</button></form>
+{% endblock %}

@@ -1,0 +1,6 @@
+{% extends "base.html" %}{% block title %}Audit log{% endblock %}
+{% block content %}<h1>Audit log</h1><p class="sub">Append-only and hash-chained. <a href="{% url 'audit_verify' %}">Verify integrity</a></p>
+<form method="get" class="filters"><label>Action<input name="action" value="{{ action }}" maxlength="60"></label><label>Actor<input name="actor" value="{{ actor }}" maxlength="150"></label><button type="submit">Filter</button></form>
+<div class="wrap"><table><thead><tr><th>#</th><th>Time</th><th>Actor</th><th>Action</th><th>Object</th><th>Before</th><th>After</th><th>IP</th></tr></thead><tbody>
+{% for e in page %}<tr><td>{{ e.id }}</td><td>{{ e.timestamp|date:"d M Y H:i:s" }}</td><td>{{ e.actor_name }}</td><td>{{ e.action }}</td><td>{{ e.object_type }} {{ e.object_id }}</td><td class="mono">{{ e.before|default:"" }}</td><td class="mono">{{ e.after|default:"" }}</td><td>{{ e.ip }}</td></tr>
+{% empty %}<tr><td colspan="8">No entries.</td></tr>{% endfor %}</tbody></table></div>{% include "_pager.html" %}{% endblock %}

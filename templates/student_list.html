@@ -1,0 +1,17 @@
+{% extends "base.html" %}{% block title %}Students{% endblock %}
+{% block content %}
+<h1>Students{% if archived %} (archived){% endif %}</h1><p class="sub">Search and filter by programme, batch and placement status.</p>
+<form method="get" class="filters">
+<label>Search<input name="q" value="{{ q }}" maxlength="80" placeholder="Name, ID or email"></label>
+<label>Programme<select name="course"><option value="">All</option>{% for c, l in courses %}<option value="{{ c }}" {% if c == course %}selected{% endif %}>{{ l }}</option>{% endfor %}</select></label>
+<label>Batch<input name="batch" value="{{ batch }}" maxlength="9" placeholder="2025-27" size="9"></label>
+<label>Placement status<select name="status"><option value="">All</option>{% for s in statuses %}<option {% if s == status %}selected{% endif %}>{{ s }}</option>{% endfor %}</select></label>
+<label>View<select name="archived"><option value="0">Active</option><option value="1" {% if archived %}selected{% endif %}>Archived</option></select></label>
+<button type="submit">Filter</button>
+{% if user.role == "ADMIN" or user.role == "OFFICER" %}<a class="btn alt" href="{% url 'student_create' %}">Add student</a>{% endif %}
+</form>
+<div class="wrap"><table><thead><tr><th>Placement ID</th><th>Name</th><th>Programme</th><th>Batch</th><th>Registration</th><th>Eligibility</th><th>Placement status</th></tr></thead><tbody>
+{% for s in page %}<tr><td><a href="{% url 'student_detail' s.pk %}">{{ s.placement_id }}</a></td><td>{{ s.name }}</td><td>{{ s.course_label }}</td><td>{{ s.batch }}</td><td>{{ s.get_registration_status_display }}</td>
+<td><span class="chip {% if s.eligibility_status == 'ELIGIBLE' %}ok{% elif s.eligibility_status == 'INELIGIBLE' %}bad{% else %}warn{% endif %}">{{ s.get_eligibility_status_display }}</span></td><td>{{ s.placement_status }}</td></tr>
+{% empty %}<tr><td colspan="7">No students match.</td></tr>{% endfor %}</tbody></table></div>
+{% include "_pager.html" %}{% endblock %}

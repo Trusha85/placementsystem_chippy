@@ -1,0 +1,10 @@
+{% extends "base.html" %}{% block title %}Record offer{% endblock %}
+{% block content %}<h1>Record offer for {{ st.name }}</h1><p class="sub">{{ st.placement_id }} - {{ st.course_label }}. The policy engine checks the offer before it is saved.</p>
+{% if decision %}{% include "_verdict.html" %}{% endif %}
+<form method="post" class="panel">{% csrf_token %}
+{% if form.non_field_errors %}<div class="msg error">{{ form.non_field_errors }}</div>{% endif %}
+{% for f in form %}{% if f.name == "override" or f.name == "override_reason" %}
+  {% if user.role == "ADMIN" and blocked %}<div class="frow"><label for="{{ f.id_for_label }}">{{ f.label }}</label>{{ f }}</div>{% endif %}
+{% else %}<div class="frow"><label for="{{ f.id_for_label }}">{{ f.label }}</label>{{ f }}{% for e in f.errors %}<div class="err">{{ e }}</div>{% endfor %}</div>{% endif %}{% endfor %}
+<p class="help">Package category is set automatically from the FTE CTC (A+ &ge; 16, A 10-16, B 6-10, C &lt; 6 LPA). The acceptance deadline is 24 hours or the company's stated timeline, whichever is earlier.</p>
+<button type="submit">Check policy and save</button> <a class="btn alt" href="{% url 'student_detail' st.pk %}">Cancel</a></form>{% endblock %}

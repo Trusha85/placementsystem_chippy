@@ -1,0 +1,3 @@
+{% extends "base.html" %}{% block title %}New drive{% endblock %}
+{% block content %}<h1>New recruitment drive</h1>
+<form method="post" class="panel">{% csrf_token %}{% include "_form.html" %}<button type="submit">Create drive</button> <a class="btn alt" href="{% url 'drive_list' %}">Cancel</a></form>{% endblock %}

@@ -1,0 +1,6 @@
+{% extends "base.html" %}{% block title %}Export{% endblock %}
+{% block content %}<h1>Export data</h1><p class="sub">Every export is written to the audit log. Salary and mobile columns are available to administrators only.</p>
+<form method="post" class="panel">{% csrf_token %}
+<div class="frow"><label for="k">Dataset</label><select id="k" name="kind"><option value="students">Students</option><option value="offers">Offers</option></select></div>
+{% if user.role == "ADMIN" %}<div class="frow"><label><input type="checkbox" name="sensitive" value="1"> Include sensitive columns (mobile, CTC, stipend)</label></div>{% endif %}
+<button type="submit">Download CSV</button></form>{% endblock %}

@@ -1,0 +1,7 @@
+{% extends "base.html" %}{% block title %}Import students{% endblock %}
+{% block content %}<h1>Import students (CSV)</h1>
+<p class="sub">Required columns: <code>placement_id, name, mobile, email, course, batch, registration_status, eligibility_status, remarks</code>.
+Course codes: MTECH_CS, MTECH_AIDS, BTECH_MTECH_CS, MSC_CS, MSC_DFIS. Status codes: REGISTERED / DEREGISTERED / NOT_REGISTERED and ELIGIBLE / INELIGIBLE / PENDING. Each row is validated; duplicate IDs are rejected.</p>
+<form method="post" enctype="multipart/form-data" class="panel">{% csrf_token %}{% include "_form.html" %}<button type="submit">Validate and import</button></form>
+{% if result %}<div class="msg {% if result.errors %}warning{% else %}success{% endif %}">{{ result.created }} row(s) imported, {{ result.errors|length }} rejected.</div>
+{% if result.errors %}<div class="wrap"><table><thead><tr><th>CSV line</th><th>Placement ID</th><th>Reason</th></tr></thead><tbody>{% for line, pid, why in result.errors %}<tr><td>{{ line }}</td><td>{{ pid }}</td><td>{{ why }}</td></tr>{% endfor %}</tbody></table></div>{% endif %}{% endif %}{% endblock %}

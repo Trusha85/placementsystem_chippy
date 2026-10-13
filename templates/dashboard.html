@@ -1,0 +1,49 @@
+{% extends "base.html" %}{% block title %}Dashboard{% endblock %}
+{% block content %}
+<h1>Placement dashboard</h1>
+<p class="sub">{% if user.role == "COORDINATOR" %}Your programme only. Compensation figures are hidden for your role.{% else %}All five programmes, session 2026-27.{% endif %}</p>
+<div class="kpis">
+ <div class="kpi"><b>{{ s.registered }}</b><span>Registered</span></div>
+ <div class="kpi"><b>{{ s.eligible }}</b><span>Eligible</span></div>
+ <div class="kpi"><b>{{ s.ineligible }}</b><span>Ineligible</span></div>
+ <div class="kpi key"><b>{{ s.placed }}</b><span>Placed (unique students)</span></div>
+ <div class="kpi"><b>{{ s.unplaced }}</b><span>Unplaced (registered)</span></div>
+ <div class="kpi"><b>{{ s.total_offers }}</b><span>Offers received (all records)</span></div>
+</div>
+<div class="kpis">
+ {% for k, v in s.kinds.items %}<div class="kpi"><b>{{ v }}</b><span>{{ k }}</span></div>{% endfor %}
+ <div class="kpi"><b>{{ s.pending_acceptance }}</b><span>Offers awaiting acceptance</span></div>
+ <div class="kpi"><b>{{ s.pending_joining }}</b><span>Accepted, joining pending</span></div>
+ <div class="kpi"><b>{{ s.needs_review }}</b><span>Policy cases for review</span></div>
+</div>
+{% if s.needs_review %}<p><a class="btn alt" href="{% url 'offer_list' %}?f=review">Open review cases</a>
+<a class="btn alt" href="{% url 'offer_list' %}?f=pending">Pending acceptance</a>
+<a class="btn alt" href="{% url 'offer_list' %}?f=joining">Pending joining</a></p>{% endif %}
+
+<h2>Course-wise and batch-wise outcomes</h2>
+<div class="wrap"><table><thead><tr><th>Programme</th><th class="n">Registered</th><th class="n">Placed</th><th class="n">Unplaced</th><th>Placement rate</th><th class="n">I only</th><th class="n">F only</th><th class="n">I + PPO/FTE</th><th>Batch (placed/registered)</th></tr></thead><tbody>
+{% for c in s.courses %}<tr><td>{{ c.label }}</td><td class="n">{{ c.registered }}</td><td class="n">{{ c.placed }}</td><td class="n">{{ c.unplaced }}</td>
+<td><meter min="0" max="100" value="{{ c.rate }}"></meter> {{ c.rate }}%</td><td class="n">{{ c.i }}</td><td class="n">{{ c.f }}</td><td class="n">{{ c.if_ }}</td><td>{{ c.batches|default:"-" }}</td></tr>{% endfor %}
+</tbody></table></div>
+
+{% if show_comp %}
+<h2>Compensation (reported separately)</h2>
+<div class="grid2">
+<div class="panel"><h3>Annual FTE CTC (LPA) - one value per placed student</h3>
+<dl class="facts"><dt>Students with FTE</dt><dd>{{ s.fte.count }}</dd><dt>Highest</dt><dd>{{ s.fte.highest|default:"-" }}</dd><dt>Average</dt><dd>{{ s.fte.average|default:"-" }}</dd><dt>Median</dt><dd>{{ s.fte.median|default:"-" }}</dd></dl></div>
+<div class="panel"><h3>Internship stipend (INR per month)</h3>
+<dl class="facts"><dt>Active internships</dt><dd>{{ s.stipend.count }}</dd><dt>Highest</dt><dd>{{ s.stipend.highest|default:"-" }}</dd><dt>Average</dt><dd>{{ s.stipend.average|default:"-" }}</dd><dt>Median</dt><dd>{{ s.stipend.median|default:"-" }}</dd></dl></div>
+</div>{% endif %}
+
+<h2>Company-wise offers</h2>
+<div class="wrap"><table><thead><tr><th>Company</th><th>Category</th><th class="n">Offers</th><th class="n">Accepted</th>{% if show_comp %}<th class="n">Max CTC (LPA)</th><th class="n">Avg CTC (LPA)</th><th class="n">Avg stipend / month</th>{% endif %}</tr></thead><tbody>
+{% for c in s.companies %}<tr><td>{{ c.name }}</td><td>{{ c.category }}</td><td class="n">{{ c.offers }}</td><td class="n">{{ c.accepted }}</td>
+{% if show_comp %}<td class="n">{{ c.max_ctc|default:"-" }}</td><td class="n">{{ c.avg_ctc|default:"-" }}</td><td class="n">{{ c.avg_stipend|default:"-" }}</td>{% endif %}</tr>
+{% empty %}<tr><td colspan="7">No offers recorded yet.</td></tr>{% endfor %}</tbody></table></div>
+
+<h2>Placed students still eligible for later drives</h2>
+<p class="sub">{{ s.still_eligible|length }} placed student(s) may still take part in some opportunity under the switching rules; {{ s.out_of_process }} are out of the process (A+ or I+F).</p>
+<div class="wrap"><table><thead><tr><th>Placement ID</th><th>Name</th><th>Programme</th><th>Current status</th></tr></thead><tbody>
+{% for st in s.still_eligible %}<tr><td><a href="{% url 'student_detail' st.pk %}">{{ st.placement_id }}</a></td><td>{{ st.name }}</td><td>{{ st.course_label }}</td><td>{{ st.placement_status }}</td></tr>
+{% empty %}<tr><td colspan="4">None.</td></tr>{% endfor %}</tbody></table></div>
+{% endblock %}

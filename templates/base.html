@@ -1,0 +1,37 @@
+{% load static %}<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{% block title %}Placement Portal{% endblock %} - NFSU</title>
+<link rel="stylesheet" href="{% static 'style.css' %}"></head>
+<body>
+{% if user.is_authenticated %}
+<div class="shell">
+<nav class="side" aria-label="Main">
+  <div class="brand">NFSU Placement Cell<small>Placement session 2026-27</small></div>
+  {% if user.role == "ADMIN" or user.role == "OFFICER" or user.role == "COORDINATOR" %}
+    <a href="{% url 'dashboard' %}">Dashboard</a>
+    <a href="{% url 'student_list' %}">Students</a>
+    <a href="{% url 'offer_list' %}">Offers</a>
+    <a href="{% url 'drive_list' %}">Drives &amp; eligibility</a>
+  {% endif %}
+  {% if user.role == "ADMIN" or user.role == "OFFICER" %}
+    <a href="{% url 'student_import' %}">Import students</a>
+    <a href="{% url 'export' %}">Export</a>
+  {% endif %}
+  {% if user.role == "ADMIN" %}
+    <a href="{% url 'audit_list' %}">Audit log</a>
+    <a href="/admin-console/">Administration</a>
+  {% endif %}
+  {% if user.role == "RECRUITER" %}<a href="{% url 'recruiter_home' %}">Our offers &amp; drives</a>{% endif %}
+  {% if user.role == "STUDENT" %}<a href="{% url 'home' %}">My record</a>{% endif %}
+  <a href="{% url 'security_settings' %}">Two-step login</a>
+  <a href="{% url 'password_change' %}">Change password</a>
+  <div class="who">{{ user.get_full_name|default:user.username }}<br>{{ user.get_role_display }}
+    <form method="post" action="{% url 'logout' %}">{% csrf_token %}<button type="submit">Sign out</button></form></div>
+</nav>
+<main class="main">
+{% else %}<main class="login">{% endif %}
+{% for m in messages %}<div class="msg {{ m.tags }}" role="status">{{ m }}</div>{% endfor %}
+{% block content %}{% endblock %}
+</main>
+{% if user.is_authenticated %}</div>{% endif %}
+</body></html>

@@ -1,0 +1,13 @@
+{% extends "base.html" %}{% block title %}{{ drive.title }}{% endblock %}
+{% block content %}<h1>{{ drive.title }}</h1>
+<p class="sub">{{ drive.company.name }} - {{ drive.date }} - {{ drive.get_offer_type_display }} - category {{ drive.category }}{% if drive.ctc_lpa %} ({{ drive.ctc_lpa }} LPA){% endif %}</p>
+<div class="kpis"><div class="kpi"><b>{{ counts.ALLOW }}</b><span>Allowed</span></div><div class="kpi"><b>{{ counts.REVIEW }}</b><span>Manual review</span></div><div class="kpi"><b>{{ counts.BLOCK }}</b><span>Blocked</span></div></div>
+{% if can_edit %}<form method="post" action="{% url 'drive_attendance' drive.pk %}">{% csrf_token %}{% endif %}
+<div class="wrap"><table><thead><tr><th>Student</th><th>Programme</th><th>Current status</th><th>Decision</th><th>Why</th><th>Attendance</th></tr></thead><tbody>
+{% for r in rows %}<tr><td><a href="{% url 'student_detail' r.s.pk %}">{{ r.s.placement_id }}</a> {{ r.s.name }}</td><td>{{ r.s.course_label }}</td><td>{{ r.s.placement_status }}</td>
+<td><span class="chip {{ r.d.outcome }}">{{ r.d.outcome }}</span></td>
+<td><ul class="reasons">{% for lvl, txt in r.d.items %}<li class="lvl-{{ lvl }}">{{ txt }}</li>{% endfor %}</ul></td>
+<td>{% if can_edit %}<select name="att_{{ r.s.pk }}" aria-label="Attendance for {{ r.s.name }}"><option value="">-</option>{% for v, l in att_choices %}<option value="{{ v }}" {% if r.att.status == v %}selected{% endif %}>{{ l }}</option>{% endfor %}</select>{% else %}{{ r.att.get_status_display|default:"-" }}{% endif %}</td></tr>
+{% empty %}<tr><td colspan="6">No registered students in scope.</td></tr>{% endfor %}</tbody></table></div>
+{% if can_edit %}<button type="submit">Save attendance</button></form>
+<p class="help">An unexcused absence flags the student for review at the next 3 drives. Mark "emergency exception" to clear the flag.</p>{% endif %}{% endblock %}

@@ -1,0 +1,4 @@
+{% extends "base.html" %}{% block title %}Access denied{% endblock %}
+{% block content %}<h1>Access denied</h1>
+<p class="sub">{% if csrf %}The request could not be verified (missing or expired security token). Reload the page and try again.{% else %}Your role does not allow this action. The attempt has been recorded.{% endif %}</p>
+<a class="btn alt" href="{% url 'home' %}">Back to start</a>{% endblock %}

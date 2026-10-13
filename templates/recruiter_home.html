@@ -1,0 +1,7 @@
+{% extends "base.html" %}{% block title %}Our offers{% endblock %}
+{% block content %}<h1>{{ user.company.name|default:"Recruiter" }}</h1><p class="sub">Only your own company's drives and offers are shown. Student contact details are not available to recruiters.</p>
+<h2>Drives</h2><div class="wrap"><table><thead><tr><th>Date</th><th>Drive</th><th>Offer type</th><th class="n">CTC (LPA)</th></tr></thead><tbody>
+{% for d in drives %}<tr><td>{{ d.date }}</td><td>{{ d.title }}</td><td>{{ d.get_offer_type_display }}</td><td class="n">{{ d.ctc_lpa|default:"-" }}</td></tr>{% empty %}<tr><td colspan="4">No drives.</td></tr>{% endfor %}</tbody></table></div>
+<h2>Our offers</h2><div class="wrap"><table><thead><tr><th>Placement ID</th><th>Student</th><th>Programme</th><th>Type</th><th class="n">CTC (LPA)</th><th class="n">Stipend</th><th>Acceptance</th><th>Joining</th></tr></thead><tbody>
+{% for o in offers %}<tr><td>{{ o.student.placement_id }}</td><td>{{ o.student.name }}</td><td>{{ o.student.course_label }}</td><td>{{ o.get_offer_type_display }}</td><td class="n">{{ o.ctc_lpa|default:"-" }}</td><td class="n">{{ o.stipend_amount|default:"-" }}</td><td>{{ o.get_acceptance_status_display }}</td><td>{{ o.get_joining_status_display }}</td></tr>
+{% empty %}<tr><td colspan="8">No offers.</td></tr>{% endfor %}</tbody></table></div>{% endblock %}

@@ -1,0 +1,5 @@
+{% extends "base.html" %}{% block title %}Audit verification{% endblock %}
+{% block content %}<h1>Audit chain verification</h1>
+{% if ok %}<div class="msg success">Intact: {{ count }} records verified. No record has been altered, removed or reordered.</div>
+{% else %}<div class="msg error">Tampering detected at record #{{ bad_id }} ({{ count }} earlier records verified).</div>{% endif %}
+<a class="btn alt" href="{% url 'audit_list' %}">Back to audit log</a>{% endblock %}

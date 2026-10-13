@@ -1,0 +1,3 @@
+{% extends "base.html" %}{% block title %}{{ title }}{% endblock %}
+{% block content %}<h1>{{ title }}</h1><p class="sub">Placement status is derived from recorded offers and cannot be set here.</p>
+<form method="post" class="panel">{% csrf_token %}{% include "_form.html" %}<button type="submit">Save student</button> <a class="btn alt" href="{% url 'student_list' %}">Cancel</a></form>{% endblock %}

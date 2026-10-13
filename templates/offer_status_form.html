@@ -1,0 +1,4 @@
+{% extends "base.html" %}{% block title %}Update offer{% endblock %}
+{% block content %}<h1>Update offer status</h1><p class="sub">{{ o.student.name }} - {{ o.company.name }} ({{ o.get_offer_type_display }}). Package, type and category cannot be edited; record a new offer instead.</p>
+{% if o.policy_reasons %}<div class="panel"><b>Policy result when recorded:</b> <span class="chip {{ o.policy_outcome }}">{{ o.policy_outcome }}</span><pre class="mono">{{ o.policy_reasons }}</pre></div>{% endif %}
+<form method="post" class="panel">{% csrf_token %}{% include "_form.html" %}<button type="submit">Save changes</button> <a class="btn alt" href="{% url 'student_detail' o.student_id %}">Cancel</a></form>{% endblock %}
